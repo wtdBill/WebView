@@ -7,10 +7,20 @@
     android:orientation="vertical"
     tools:context="com.example.yinpengpeng.webview.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="这是一个WebView"/>
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="这是一个WebView"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="click me"
+            android:id="@+id/click"/>
+    </LinearLayout>
 
     <WebView
         android:id="@+id/myweb"

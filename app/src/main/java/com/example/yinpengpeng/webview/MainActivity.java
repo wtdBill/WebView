@@ -7,13 +7,17 @@ import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.webkit.JsResult;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
     private WebView webView;
     private Handler mHandler=new Handler();
 
@@ -24,7 +28,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         webView = findViewById(R.id.myweb);
 
-        webView.loadUrl("https://www.baidu.com/?tn=78000241_5_hao_pg");
+//        webView.loadUrl("https://www.baidu.com/?tn=78000241_5_hao_pg");
+        webView.loadUrl("file:///android_asset/aa.html");
         webView.getSettings().setJavaScriptEnabled(true);//设置JavaScript支持
         webView.requestFocus();//设置焦点支持
         webView.canGoBack();//设置goback支持
@@ -101,6 +106,25 @@ public class MainActivity extends AppCompatActivity {
         },"demo");
 
 
+        //调用html总的JS方法
+        findViewById(R.id.click).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                webView.post(new Runnable() {
+                    @Override
+                    public void run() {
+//                        webView.loadUrl("aa:callJS()");方法1
+                        //方法二  效率高  有返回值  向下兼容差
+                        webView.evaluateJavascript("aa:callJS()", new ValueCallback<String>() {
+                            @Override
+                            public void onReceiveValue(String value) {
+                                Log.d(TAG, "onReceiveValue: ");
+                            }
+                        });
+                    }
+                });
+            }
+        });
 
 
     }
