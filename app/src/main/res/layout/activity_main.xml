@@ -20,7 +20,17 @@
             android:layout_height="wrap_content"
             android:text="click me"
             android:id="@+id/click"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="切换"
+            android:id="@+id/choose"/>
     </LinearLayout>
+    <ProgressBar
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:id="@+id/progress"/>
 
     <WebView
         android:id="@+id/myweb"

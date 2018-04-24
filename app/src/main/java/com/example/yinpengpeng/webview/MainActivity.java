@@ -15,10 +15,14 @@ import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private WebView webView;
+    private ProgressBar progressBar;
+    private static final String BAIDU="https://www.baidu.com/?tn=78000241_5_hao_pg";
+    private static final String MY_PAGE="file:///android_asset/aa.html";
     private Handler mHandler=new Handler();
 
     @SuppressLint({"SetJavaScriptEnabled", "AddJavascriptInterface", "JavascriptInterface"})
@@ -27,12 +31,27 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         webView = findViewById(R.id.myweb);
+        progressBar=findViewById(R.id.progress);
 
-//        webView.loadUrl("https://www.baidu.com/?tn=78000241_5_hao_pg");
-        webView.loadUrl("file:///android_asset/aa.html");
+        //获取当前的URL并切换
+        findViewById(R.id.choose).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (webView.getUrl().equals(BAIDU)){
+                    webView.loadUrl(MY_PAGE);
+                }else {
+                    webView.loadUrl(BAIDU);
+                }
+            }
+        });
+
+        webView.loadUrl(BAIDU);
+//        webView.loadUrl("file:///android_asset/aa.html");
         webView.getSettings().setJavaScriptEnabled(true);//设置JavaScript支持
+        webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);//允许JS弹窗
         webView.requestFocus();//设置焦点支持
         webView.canGoBack();//设置goback支持
+
 
         //希望点击链接由自己处理，而不是新开 Android 的系统 browser 中响应该链接,以下是打开的几个阶段
 
@@ -64,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                 super.onReceivedError(view, errorCode, description, failingUrl);
             }
+
         });
 
         // 处理网页中的一些对话框信息（提示对话框，带选择的对话框，带输入的对话框）
@@ -72,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("提示对话框");
+                builder.setTitle("提示对话框啊");
                 builder.setMessage(message);
                 builder.setPositiveButton("ok", new AlertDialog.OnClickListener() {
 
@@ -87,8 +107,16 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
+            public void onReceivedTitle(WebView view, String title) {
+                //获取网页的标题
+                Log.d(TAG, title);
+                super.onReceivedTitle(view, title);
+            }
+
+            @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 //此处可以获取加载的进度
+                progressBar.setProgress(newProgress);
                 super.onProgressChanged(view, newProgress);
             }
         });
@@ -99,14 +127,14 @@ public class MainActivity extends AppCompatActivity {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        //
+                        Log.d(TAG, "run: call success");
                     }
                 });
             }
         },"demo");
 
 
-        //调用html总的JS方法
+        //调用html总的JS方法  **当前WebView界面中的JS方法
         findViewById(R.id.click).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
